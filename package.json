@@ -1,0 +1,37 @@
+{
+  "name": "@ecrow-ltd/app-state",
+  "version": "1.0.0",
+  "description": "A common normalized application state using Redux.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./config/devtool/server.js",
+    "build": "npm run build:lib",
+    "build:lib": "tsc --sourceRoot ./src --outDir ./.lib -d --declarationDir ./.lib",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ecrow-ltd/app-state.git"
+  },
+  "author": "Eric Crowell",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ecrow-ltd/app-state/issues"
+  },
+  "homepage": "https://github.com/ecrow-ltd/app-state#readme",
+  "devDependencies": {
+    "awesome-typescript-loader": "^5.2.1",
+    "react": "^16.8.6",
+    "react-hot-loader": "^4.12.3",
+    "react-redux": "^7.1.0",
+    "redux-devtools-extension": "^2.13.8",
+    "remotedev-server": "^0.3.1",
+    "typescript": "^3.5.2",
+    "webpack": "^4.35.2",
+    "webpack-cli": "^3.3.5",
+    "webpack-dev-server": "^3.7.2"
+  },
+  "dependencies": {
+    "redux": "^4.0.1"
+  }
+}
