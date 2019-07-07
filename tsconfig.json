@@ -12,7 +12,8 @@
     "emitDecoratorMetadata": true,
     "declarationDir": "dist",
     "outDir": "dist",
-    "typeRoots": ["node_modules/@types"]
+    "typeRoots": ["node_modules/@types"],
+    "jsx": "react"
   },
   "include": ["src"]
 }

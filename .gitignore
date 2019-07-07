@@ -3,9 +3,10 @@ logs
 *.log
 
 # Compiled versions
-lib
-dist
-doc
+.lib
+.dist
+.doc
+.build
 
 # Runtime data
 pids
