@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npm run start:remotedev & npm run start:devtool",
     "start:devtool": "webpack-dev-server --watch-poll --config config/devtool/webpack.config.js",
-    "start:remotedev": "remotedev --hostname=localhost --port=8000",
+    "start:remotedev": "remotedev --hostname=localhost --port=2770",
     "build": "npm run build:lib",
     "build:lib": "tsc --sourceRoot ./src --outDir ./.lib -d --declarationDir ./.lib",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -23,7 +23,11 @@
   "homepage": "https://github.com/ecrow-ltd/app-state#readme",
   "devDependencies": {
     "@types/node": "^12.0.12",
+    "@types/react-dom": "^16.9.4",
     "@types/react-redux": "^7.1.1",
+    "@types/redux-devtools": "^3.0.47",
+    "@types/redux-devtools-dock-monitor": "^1.1.33",
+    "@types/redux-devtools-log-monitor": "^1.0.34",
     "@types/remote-redux-devtools": "^0.5.3",
     "@types/webpack-env": "^1.13.9",
     "awesome-typescript-loader": "^5.2.1",
@@ -32,6 +36,10 @@
     "react-dom": "^16.8.6",
     "react-hot-loader": "^4.12.3",
     "react-redux": "^7.1.0",
+    "redux-devtools": "^3.5.0",
+    "redux-devtools-dock-monitor": "^1.1.3",
+    "redux-devtools-inspector": "^0.11.3",
+    "redux-devtools-log-monitor": "^1.4.0",
     "remote-redux-devtools": "^0.5.16",
     "remotedev-server": "^0.3.1",
     "typescript": "^3.5.2",
@@ -40,6 +48,6 @@
     "webpack-dev-server": "^3.7.2"
   },
   "dependencies": {
-    "redux": "^4.0.1"
+    "redux": "^4.0.5"
   }
 }

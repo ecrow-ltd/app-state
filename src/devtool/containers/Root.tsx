@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Provider } from "react-redux";
+import DevTools from "./DevTools";
 
 export interface IProps {
   store: any;
@@ -13,10 +14,7 @@ export default class Root extends Component<IProps, IState> {
     return (
       <Provider store={store}>
         <div>
-          <div>
-            Redux state initiated. Start the{" "}
-            <strong>Remote Redux Server</strong> to view
-          </div>
+          <DevTools />
         </div>
       </Provider>
     );
