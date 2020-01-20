@@ -16,7 +16,7 @@
     "url": "git+https://github.com/ecrow-ltd/app-state.git"
   },
   "author": "Eric Crowell",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/ecrow-ltd/app-state/issues"
   },
