@@ -1,11 +1,11 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { createStore, compose } from "redux";
-import { composeWithDevTools } from "remote-redux-devtools";
-import { reducers } from "../state";
-import * as actions from "../state/actions/todo";
-import Root from "./containers/Root";
-import DevTools from "./containers/DevTools";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { createStore, compose } from 'redux';
+import { composeWithDevTools } from 'remote-redux-devtools';
+import { reducers } from '../state';
+import * as actions from '../state/actions/todo';
+import Root from './Root';
+import DevTools from './containers/DevTools';
 
 // const composeEnhancers = composeWithDevTools({
 //   name: "app-state",
@@ -15,7 +15,7 @@ import DevTools from "./containers/DevTools";
 // });
 // const enhancer = composeEnhancers();
 
-const enhancer = compose(DevTools.instrument())
+const enhancer = compose(DevTools.instrument());
 
 const store = createStore(reducers, enhancer);
 
@@ -23,5 +23,5 @@ ReactDOM.render(
   <div>
     <Root store={store} />
   </div>,
-  document.getElementById("app")
+  document.getElementById('app')
 );

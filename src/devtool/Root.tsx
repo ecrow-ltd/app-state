@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import { Provider } from "react-redux";
-import DevTools from "./DevTools";
+import React, { Component } from 'react';
+import { Provider } from 'react-redux';
+import DevTools from './containers/DevTools';
 
 export interface IProps {
   store: any;
