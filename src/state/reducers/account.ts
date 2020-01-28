@@ -1,6 +1,7 @@
 import Reducer from '../Reducer';
 
 export interface Account {
+  $id: string;
   username: string;
   password: string;
   email: string;
@@ -9,7 +10,7 @@ export interface Account {
 const accountReducer = new Reducer<Account>('account');
 
 /**
- * User Creation
+ * Account Creation
  */
 export const create = accountReducer.action<Account>(
   'CREATE',

@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import { createStore, compose } from 'redux';
 import { composeWithDevTools } from 'remote-redux-devtools';
 import { reducers } from '../state';
-import * as actions from '../state/actions/todo';
 import Root from './Root';
 import DevTools from './containers/DevTools';
 
@@ -20,7 +19,7 @@ const enhancer = compose(DevTools.instrument());
 const store = createStore(reducers, enhancer);
 
 ReactDOM.render(
-  <div>
+  <div style={{ height: '100%' }}>
     <Root store={store} />
   </div>,
   document.getElementById('app')

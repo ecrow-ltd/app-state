@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
+import App from './application/App';
 import DevTools from './containers/DevTools';
 
 export interface IProps {
@@ -13,8 +14,13 @@ export default class Root extends Component<IProps, IState> {
     const { store } = this.props;
     return (
       <Provider store={store}>
-        <div>
-          <DevTools />
+        <div style={{ display: 'flex', height: '100%' }}>
+          <div style={{ flex: 7 }}>
+            <App />
+          </div>
+          <div style={{ flex: 6, minWidth: 550 }}>
+            <DevTools />
+          </div>
         </div>
       </Provider>
     );
