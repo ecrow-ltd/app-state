@@ -97,12 +97,22 @@ export default class Reducer<T> {
   }
 
   /**
+   * Gets the name of the reducer.
+   */
+  public getName = () => this.name;
+
+  /**
+   * Gets the name of the reducer.
+   */
+  public getState = () => this.state;
+
+  /**
    * The actual reducer method.
    */
   public method = (state: IState<T> = this.state, action: any): IState<T> => {
     const type = action.type;
     if (this.actions[type]) {
-      return this.actions[type](state, action.payload);
+      state = this.actions[type](state, action.payload);
     }
 
     return state;
