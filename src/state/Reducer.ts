@@ -9,7 +9,7 @@ export interface IState<T> {
   /**
    * Indexes to objects in the collection.
    */
-  indexes: Object;
+  indexes: { [key: string]: { [key: string]: T } };
   /**
    * A reference of the object that the application is currently focused on.
    */
@@ -27,7 +27,11 @@ export interface IState<T> {
 /**
  * Type for a reducer function on an action.
  */
-export type ActionReducer<T, P> = (state: IState<T>, payload: P) => IState<T>;
+export type ActionReducer<T, P> = (
+  state: IState<T>,
+  payload: P,
+  context: Reducer<T>
+) => IState<T>;
 
 /**
  * Primary structure of a Reducer.
@@ -97,6 +101,15 @@ export default class Reducer<T> {
   }
 
   /**
+   * Creates on index on a key value of documents in the collection.
+   * You can only index before the reducer is added to the store.
+   * @param key The key to index on documents of this reducer's collection.
+   */
+  public index = (key: string) => {
+    this.state.indexes[key] = {};
+  };
+
+  /**
    * Gets the name of the reducer.
    */
   public getName = () => this.name;
@@ -112,7 +125,7 @@ export default class Reducer<T> {
   public method = (state: IState<T> = this.state, action: any): IState<T> => {
     const type = action.type;
     if (this.actions[type]) {
-      state = this.actions[type](state, action.payload);
+      state = this.actions[type](state, action.payload, this);
     }
 
     return state;
