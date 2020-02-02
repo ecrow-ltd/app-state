@@ -27,11 +27,20 @@ export interface IState<T> {
 /**
  * Type for a reducer function on an action.
  */
-export type ActionReducer<T, P> = (
+export type ActionMethod<T, P> = (
   state: IState<T>,
   payload: P,
   context: Reducer<T>
 ) => IState<T>;
+
+/**
+ * Type for a finalized action object.
+ */
+export interface Action<T, P> {
+  type: string;
+  schema: any;
+  method: ActionMethod<T, P>;
+}
 
 /**
  * Primary structure of a Reducer.
@@ -87,7 +96,7 @@ export default class Reducer<T> {
   /**
    * References to action reducer functions.
    */
-  private actions: { [key: string]: ActionReducer<T, any> };
+  private actions: { [key: string]: Action<T, any> };
 
   /**
    * Create a new reducer instance.
@@ -125,7 +134,7 @@ export default class Reducer<T> {
   public method = (state: IState<T> = this.state, action: any): IState<T> => {
     const type = action.type;
     if (this.actions[type]) {
-      state = this.actions[type](state, action.payload, this);
+      state = this.actions[type].method(state, action.payload, this);
     }
 
     return state;
@@ -137,11 +146,15 @@ export default class Reducer<T> {
    */
   public action = <P>(
     type: string,
-    reducer: ActionReducer<T, P>
-  ): ActionReducer<T, P> => {
-    return (this.actions[
-      `${this.name.toUpperCase()}/${type.toUpperCase()}`
-    ] = reducer);
+    schema: any,
+    method: ActionMethod<T, P>
+  ): ActionMethod<T, P> => {
+    const action = {
+      type: `${this.name.toUpperCase()}/${type.toUpperCase()}`,
+      schema,
+      method
+    };
+    return action.method;
   };
 
   /**
