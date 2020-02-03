@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Reducer from '../../state/Reducer';
+import Button from '@material-ui/core/Button';
 
 export interface IProps {
   state: any;
@@ -28,7 +29,8 @@ class App extends Component<IProps, IState> {
   }
 
   private Row = (props: any) => {
-    const { name, collection, indexes } = props.state;
+    const { _name, collection, _indexes } = props.state;
+    console.log(props.actions);
     return (
       <div
         style={{
@@ -39,14 +41,18 @@ class App extends Component<IProps, IState> {
             '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'
         }}
       >
-        <this.LeftColumn name={name} collection={collection} />
-        <this.RightColumn indexes={indexes} />
+        <this.LeftColumn
+          name={_name}
+          collection={collection}
+          actions={props.actions}
+        />
+        <this.RightColumn indexes={_indexes} />
       </div>
     );
   };
 
   private LeftColumn = (props: any) => {
-    const { name, collection } = props;
+    const { name, collection, actions } = props;
     return (
       <div style={{ flex: 4, padding: '10px 32px' }}>
         <span>
@@ -55,6 +61,9 @@ class App extends Component<IProps, IState> {
         <hr
           style={{ height: 1, backgroundColor: '#00000044', border: 'none' }}
         />
+        {Object.keys(actions).map((key: string) => (
+          <this.ActionButton key={key} action={actions[key]} />
+        ))}
       </div>
     );
   };
@@ -84,12 +93,34 @@ class App extends Component<IProps, IState> {
     );
   };
 
+  private ActionButton = (props: any) => {
+    const { action } = props;
+    console.log('ACTION: ', action);
+    return (
+      <Button
+        style={{
+          fontFamily: 'Verdana, Geneva, sans-serif',
+          padding: '1px 8px',
+          backgroundColor: '#3d4b5e',
+          color: '#cfcfcf'
+        }}
+        variant="contained"
+      >
+        {action.type.split('/')[1]}
+      </Button>
+    );
+  };
+
   render() {
     const { reducers } = this.state;
     return (
       <div>
         {reducers.map(reducer => (
-          <this.Row state={reducer.getState()} />
+          <this.Row
+            key={reducer.getName()}
+            state={reducer.getState()}
+            actions={reducer.getActions()}
+          />
         ))}
       </div>
     );

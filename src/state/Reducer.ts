@@ -5,19 +5,19 @@ export interface IState<T> {
   /**
    * The name of the state.
    */
-  name: string;
+  _name: string;
   /**
    * Indexes to objects in the collection.
    */
-  indexes: { [key: string]: { [key: string]: T } };
+  _indexes: { [key: string]: { [key: string]: T } };
   /**
    * A reference of the object that the application is currently focused on.
    */
-  focused: T | null;
+  _focused: T | null;
   /**
    * References to objects that the application considers selected.
    */
-  selected: T[];
+  _selected: T[];
   /**
    * The collection of referenced objects this reducer manages.
    */
@@ -34,11 +34,28 @@ export type ActionMethod<T, P> = (
 ) => IState<T>;
 
 /**
- * Type for a finalized action object.
+ * Interface for actions on a reducer.
  */
 export interface Action<T, P> {
+  /**
+   * The string key that will trigger this action.
+   * This also allows action for triggers on other reducers.
+   */
   type: string;
+
+  /**
+   * The JSON Schema object for the action's payload.
+   */
   schema: any;
+
+  /**
+   * The validator function (compiled frm the JSON Schema object).
+   */
+  validator: any;
+
+  /**
+   * The method for an action is essentially a piece of the reducer function.
+   */
   method: ActionMethod<T, P>;
 }
 
@@ -69,11 +86,24 @@ export default class Reducer<T> {
   }
 
   /**
+   * Returns all instantiated reducers mapped by their name.
+   */
+  public static map() {
+    const map: { [key: string]: any } = {};
+    const reducers = Reducer.reducers;
+    for (let i = 0; i < reducers.length; i++) {
+      const reducer = reducers[i];
+      map[reducer.name.toLowerCase()] = reducer;
+    }
+    return map;
+  }
+
+  /**
    * Returns all instantiated reducer methods in an key: value map.
    * The map is the name of the reducer (key) with the reducer method (value).
    * name: method;
    */
-  public static map() {
+  public static mapMethods() {
     const map: { [key: string]: any } = {};
     const reducers = Reducer.reducers;
     for (let i = 0; i < reducers.length; i++) {
@@ -99,6 +129,12 @@ export default class Reducer<T> {
   private actions: { [key: string]: Action<T, any> };
 
   /**
+   * Readme documentation for this reducer.
+   * This is typically only assigned if the application is in developer mode.
+   */
+  private doc: string;
+
+  /**
    * Create a new reducer instance.
    * @param name The name of the reducer
    */
@@ -107,6 +143,7 @@ export default class Reducer<T> {
     this.name = name;
     this.state = this.createState(name);
     this.actions = {};
+    this.doc = '';
   }
 
   /**
@@ -115,7 +152,7 @@ export default class Reducer<T> {
    * @param key The key to index on documents of this reducer's collection.
    */
   public index = (key: string) => {
-    this.state.indexes[key] = {};
+    this.state._indexes[key] = {};
   };
 
   /**
@@ -127,6 +164,11 @@ export default class Reducer<T> {
    * Gets the name of the reducer.
    */
   public getState = () => this.state;
+
+  /**
+   * Gets the actions on this reducer.
+   */
+  public getActions = () => this.actions;
 
   /**
    * The actual reducer method.
@@ -147,14 +189,21 @@ export default class Reducer<T> {
   public action = <P>(
     type: string,
     schema: any,
-    method: ActionMethod<T, P>
+    method: ActionMethod<T, P>,
+    validator: any = () => true
   ): ActionMethod<T, P> => {
     const action = {
       type: `${this.name.toUpperCase()}/${type.toUpperCase()}`,
       schema,
-      method
+      method,
+      validator
     };
+    this.actions[action.type] = action;
     return action.method;
+  };
+
+  public documentation = (text: string) => {
+    this.doc = text;
   };
 
   /**
@@ -162,10 +211,10 @@ export default class Reducer<T> {
    */
   private createState(name: string): IState<T> {
     return {
-      name,
-      indexes: {},
-      focused: null,
-      selected: [],
+      _name: name,
+      _indexes: {},
+      _focused: null,
+      _selected: [],
       collection: []
     };
   }

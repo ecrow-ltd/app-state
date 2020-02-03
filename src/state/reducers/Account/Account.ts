@@ -22,4 +22,8 @@ const types = {
 Account.index('$id');
 Account.index('username');
 
+Account.documentation(`
+The account reducer maintains account information about a specific user.
+`);
+
 export default Account;

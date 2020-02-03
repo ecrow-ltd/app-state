@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/ecrow-ltd/app-state#readme",
   "devDependencies": {
+    "@material-ui/core": "^4.9.1",
     "@types/node": "^12.0.12",
     "@types/react-dom": "^16.9.4",
     "@types/react-redux": "^7.1.1",
@@ -35,6 +36,7 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-hot-loader": "^4.12.3",
+    "react-markdown": "^4.3.1",
     "react-redux": "^7.1.0",
     "redux-devtools": "^3.5.0",
     "redux-devtools-dock-monitor": "^1.1.3",
