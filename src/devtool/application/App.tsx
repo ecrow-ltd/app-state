@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Reducer from '../../state/Reducer';
 import Button from '@material-ui/core/Button';
+import ActionDialog from './ActionDialog';
 
 export interface IProps {
   state: any;
@@ -10,24 +11,34 @@ export interface IState {
   reducers: Reducer<any>[];
 }
 
+/**
+ * Map the state properties with properties we want to pass to the app component.
+ */
 const mapStateToProps = (state: any) => ({
   state
 });
 
 @(connect(mapStateToProps) as any)
+/**
+ * The main application component.
+ */
 class App extends Component<IProps, IState> {
   static defaultProps = {
     state: {}
   };
 
   state = {
-    reducers: Reducer.all()
+    reducers: Reducer.all(),
+    dialogOpen: false
   };
 
   constructor(props: IProps) {
     super(props);
   }
 
+  /**
+   * Row Component.
+   */
   private Row = (props: any) => {
     const { _name, collection, _indexes } = props.state;
     console.log(props.actions);
@@ -111,6 +122,13 @@ class App extends Component<IProps, IState> {
     );
   };
 
+  private handleDialogClose = () => {
+    this.setState(state => ({
+      ...state,
+      dialogOpen: false
+    }));
+  };
+
   render() {
     const { reducers } = this.state;
     return (
@@ -122,6 +140,10 @@ class App extends Component<IProps, IState> {
             actions={reducer.getActions()}
           />
         ))}
+        <ActionDialog
+          open={this.state.dialogOpen}
+          onClose={this.handleDialogClose}
+        />
       </div>
     );
   }
