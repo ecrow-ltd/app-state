@@ -1,3 +1,5 @@
+import { IObjectSchema } from './Schema';
+
 /**
  * The type interface for a reducer's initial state.
  */
@@ -11,13 +13,9 @@ export interface IState<T> {
    */
   _indexes: { [key: string]: { [key: string]: T } };
   /**
-   * A reference of the object that the application is currently focused on.
+   * Array of keys that should be unique.
    */
-  _focused: T | null;
-  /**
-   * References to objects that the application considers selected.
-   */
-  _selected: T[];
+  _uniques: string[];
   /**
    * The collection of referenced objects this reducer manages.
    */
@@ -44,6 +42,11 @@ export interface Action<T, P> {
   type: string;
 
   /**
+   * Description of the action.
+   */
+  description: string;
+
+  /**
    * The JSON Schema object for the action's payload.
    */
   schema: any;
@@ -60,7 +63,7 @@ export interface Action<T, P> {
 }
 
 /**
- * Primary structure of a Reducer.
+ * Primary structure of a Reducer with Collection structure.
  * The reducer requires a type to validate insertions of information.
  */
 export default class Reducer<T> {
@@ -136,9 +139,10 @@ export default class Reducer<T> {
 
   /**
    * Create a new reducer instance.
-   * @param name The name of the reducer
+   * @param name The name of the state this reducer manages.
+   * @param schema The schema definition of the state this reducer manages.
    */
-  constructor(name: string) {
+  constructor(name: string, schema: IObjectSchema<T>) {
     Reducer.reducers.push(this);
     this.name = name;
     this.state = this.createState(name);
@@ -150,9 +154,13 @@ export default class Reducer<T> {
    * Creates on index on a key value of documents in the collection.
    * You can only index before the reducer is added to the store.
    * @param key The key to index on documents of this reducer's collection.
+   * @param unique If the indexed key should be unique.
    */
-  public index = (key: string) => {
+  public index = (key: string, unique: boolean = false) => {
     this.state._indexes[key] = {};
+    if (unique) {
+      this.state._uniques.push(key);
+    }
   };
 
   /**
@@ -188,12 +196,14 @@ export default class Reducer<T> {
    */
   public action = <P>(
     type: string,
+    description: string,
     schema: any,
     method: ActionMethod<T, P>,
     validator: any = () => true
   ): ActionMethod<T, P> => {
     const action = {
       type: `${this.name.toUpperCase()}/${type.toUpperCase()}`,
+      description,
       schema,
       method,
       validator
@@ -213,8 +223,7 @@ export default class Reducer<T> {
     return {
       _name: name,
       _indexes: {},
-      _focused: null,
-      _selected: [],
+      _uniques: [],
       collection: []
     };
   }

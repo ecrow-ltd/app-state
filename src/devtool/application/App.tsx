@@ -29,7 +29,8 @@ class App extends Component<IProps, IState> {
 
   state = {
     reducers: Reducer.all(),
-    dialogOpen: false
+    dialogOpen: false,
+    dialogData: {}
   };
 
   constructor(props: IProps) {
@@ -41,7 +42,6 @@ class App extends Component<IProps, IState> {
    */
   private Row = (props: any) => {
     const { _name, collection, _indexes } = props.state;
-    console.log(props.actions);
     return (
       <div
         style={{
@@ -106,7 +106,6 @@ class App extends Component<IProps, IState> {
 
   private ActionButton = (props: any) => {
     const { action } = props;
-    console.log('ACTION: ', action);
     return (
       <Button
         style={{
@@ -116,10 +115,19 @@ class App extends Component<IProps, IState> {
           color: '#cfcfcf'
         }}
         variant="contained"
+        onClick={() => this.handleDialogOpen(action)}
       >
         {action.type.split('/')[1]}
       </Button>
     );
+  };
+
+  private handleDialogOpen = (action: any) => {
+    this.setState(state => ({
+      ...state,
+      dialogOpen: true,
+      dialogData: action
+    }));
   };
 
   private handleDialogClose = () => {
@@ -143,6 +151,7 @@ class App extends Component<IProps, IState> {
         <ActionDialog
           open={this.state.dialogOpen}
           onClose={this.handleDialogClose}
+          action={this.state.dialogData}
         />
       </div>
     );

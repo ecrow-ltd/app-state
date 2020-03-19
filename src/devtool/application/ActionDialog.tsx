@@ -4,15 +4,22 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 
+import ObjectForm from './ObjectForm';
+
 export interface IProps {
   open: boolean;
   onClose: () => any;
+  action: any;
 }
 export interface IState {}
 
 class ActionDialog extends Component<IProps, IState> {
   static defaultProps = {
     open: false,
+    action: {
+      type: 'No Type',
+      schema: {}
+    },
     onClose: () => {}
   };
 
@@ -21,14 +28,13 @@ class ActionDialog extends Component<IProps, IState> {
   };
 
   render() {
-    const { open, onClose } = this.props;
+    const { open, onClose, action } = this.props;
     return (
       <Dialog open={open} onClose={this.handleClose}>
-        <DialogTitle>This is the title</DialogTitle>
+        <DialogTitle>{action.type}</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            This is the textual content of the dialog.
-          </DialogContentText>
+          <DialogContentText>{action.description}</DialogContentText>
+          <ObjectForm schema={action.schema} />
         </DialogContent>
       </Dialog>
     );
