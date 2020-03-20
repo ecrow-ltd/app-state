@@ -1,5 +1,5 @@
 import Reducer from '../../Reducer';
-import { IObjectSchema } from '../../Schema';
+import { IObjectSchema } from '../../Schema.d';
 
 /**
  * The TypeScript interface for the sub-state.
@@ -32,7 +32,7 @@ export interface IAccount {
   /**
    * ID Reference to a person object.
    */
-  ref_person: string;
+  referencePerson: string;
 }
 
 /**
@@ -74,7 +74,7 @@ export const schema: IObjectSchema<IAccount> = {
         'The hashed password for the account. Zero length for clients.',
       default: ''
     },
-    ref_person: {
+    referencePerson: {
       type: 'string',
       description: 'ID Reference to a person object.',
       default: ''

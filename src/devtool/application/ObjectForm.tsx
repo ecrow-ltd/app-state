@@ -23,13 +23,14 @@ class ObjectForm extends PureComponent<IProps, IState> {
   };
 
   private Input = (props: any) => {
-    const { name, description, type, required } = props;
+    const { name, description, type, required, defaultValue } = props;
 
     const title = this.keyToWords(name);
     const input = this.getInputElementByType(
       type,
       title,
       description,
+      defaultValue,
       required
     );
 
@@ -50,6 +51,7 @@ class ObjectForm extends PureComponent<IProps, IState> {
     type: string,
     label: string = '',
     description: string = '',
+    defaultValue: any,
     required: boolean = false
   ) => {
     switch (type) {
@@ -61,7 +63,9 @@ class ObjectForm extends PureComponent<IProps, IState> {
             variant="outlined"
             helperText={description}
             required={required}
-            style={{ marginBottom: 5 }}
+            style={{ marginBottom: 3 }}
+            size="small"
+            value={defaultValue}
           />
         );
       default:
@@ -80,6 +84,7 @@ class ObjectForm extends PureComponent<IProps, IState> {
         description={schemaProps[key].description}
         type={schemaProps[key].type}
         required={schemaRequires.includes(key)}
+        defaultValue={schemaProps[key].default}
       />
     ));
 

@@ -41,7 +41,7 @@ class App extends Component<IProps, IState> {
    * Row Component.
    */
   private Row = (props: any) => {
-    const { _name, collection, _indexes } = props.state;
+    const { _name, collection, _indices } = props.state;
     return (
       <div
         style={{
@@ -57,7 +57,7 @@ class App extends Component<IProps, IState> {
           collection={collection}
           actions={props.actions}
         />
-        <this.RightColumn indexes={_indexes} />
+        <this.RightColumn indices={_indices} />
       </div>
     );
   };
@@ -80,13 +80,13 @@ class App extends Component<IProps, IState> {
   };
 
   private RightColumn = (props: any) => {
-    const { indexes } = props;
-    const indexKeys = Object.keys(indexes);
+    const { indices } = props;
+    const indexKeys = Object.keys(indices);
     return (
       <div
         style={{ flex: 1, backgroundColor: '#00000033', padding: '10px 32px' }}
       >
-        <div>Indexes</div>
+        <div>Indices</div>
         <hr
           style={{ height: 1, backgroundColor: '#00000044', border: 'none' }}
         />

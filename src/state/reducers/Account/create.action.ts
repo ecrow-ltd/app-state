@@ -15,7 +15,7 @@ export const create = Account.action<IAccount>(
   'CREATE',
   description,
   schema,
-  (state, payload, context) => {
+  (state, payload) => {
     const newAccount: IAccount = { ...payload };
     state.collection.push(newAccount);
 

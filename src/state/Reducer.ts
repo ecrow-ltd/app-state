@@ -1,66 +1,5 @@
 import { IObjectSchema } from './Schema';
-
-/**
- * The type interface for a reducer's initial state.
- */
-export interface IState<T> {
-  /**
-   * The name of the state.
-   */
-  _name: string;
-  /**
-   * Indexes to objects in the collection.
-   */
-  _indexes: { [key: string]: { [key: string]: T } };
-  /**
-   * Array of keys that should be unique.
-   */
-  _uniques: string[];
-  /**
-   * The collection of referenced objects this reducer manages.
-   */
-  collection: T[];
-}
-
-/**
- * Type for a reducer function on an action.
- */
-export type ActionMethod<T, P> = (
-  state: IState<T>,
-  payload: P,
-  context: Reducer<T>
-) => IState<T>;
-
-/**
- * Interface for actions on a reducer.
- */
-export interface Action<T, P> {
-  /**
-   * The string key that will trigger this action.
-   * This also allows action for triggers on other reducers.
-   */
-  type: string;
-
-  /**
-   * Description of the action.
-   */
-  description: string;
-
-  /**
-   * The JSON Schema object for the action's payload.
-   */
-  schema: any;
-
-  /**
-   * The validator function (compiled frm the JSON Schema object).
-   */
-  validator: any;
-
-  /**
-   * The method for an action is essentially a piece of the reducer function.
-   */
-  method: ActionMethod<T, P>;
-}
+import { IState, IAction, TActionMethod } from './Reducer.d';
 
 /**
  * Primary structure of a Reducer with Collection structure.
@@ -129,7 +68,7 @@ export default class Reducer<T> {
   /**
    * References to action reducer functions.
    */
-  private actions: { [key: string]: Action<T, any> };
+  private actions: { [key: string]: IAction<T, any> };
 
   /**
    * Readme documentation for this reducer.
@@ -157,7 +96,7 @@ export default class Reducer<T> {
    * @param unique If the indexed key should be unique.
    */
   public index = (key: string, unique: boolean = false) => {
-    this.state._indexes[key] = {};
+    this.state._indices[key] = {};
     if (unique) {
       this.state._uniques.push(key);
     }
@@ -184,7 +123,7 @@ export default class Reducer<T> {
   public method = (state: IState<T> = this.state, action: any): IState<T> => {
     const type = action.type;
     if (this.actions[type]) {
-      state = this.actions[type].method(state, action.payload, this);
+      state = this.actions[type].method(state, action.payload);
     }
 
     return state;
@@ -198,9 +137,9 @@ export default class Reducer<T> {
     type: string,
     description: string,
     schema: any,
-    method: ActionMethod<T, P>,
+    method: TActionMethod<T, P>,
     validator: any = () => true
-  ): ActionMethod<T, P> => {
+  ): TActionMethod<T, P> => {
     const action = {
       type: `${this.name.toUpperCase()}/${type.toUpperCase()}`,
       description,
@@ -222,7 +161,7 @@ export default class Reducer<T> {
   private createState(name: string): IState<T> {
     return {
       _name: name,
-      _indexes: {},
+      _indices: {},
       _uniques: [],
       collection: []
     };
