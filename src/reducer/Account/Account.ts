@@ -1,5 +1,5 @@
-import Reducer from '../../Reducer';
-import { IObjectSchema } from '../../Schema.d';
+import Collection from '@state/Collection';
+import { IObjectSchema } from '@state/Schema.d';
 
 /**
  * The TypeScript interface for the sub-state.
@@ -36,7 +36,8 @@ export interface IAccount {
 }
 
 /**
- * The Create Schema
+ * The JSON Schema definition for the sub-state.
+ * This should match the typescript interface (which will be enforced if using typescript).
  */
 export const schema: IObjectSchema<IAccount> = {
   $schema: 'http://json-schema.org/schema#',
@@ -84,11 +85,12 @@ export const schema: IObjectSchema<IAccount> = {
 };
 
 /**
- * The JSON Schema definition for the sub-state.
- * This should match the typescript interface.
+ * Instantiate the Account collection.
  */
-
-const Account = new Reducer<IAccount>('account', schema);
+const Account = new Collection<IAccount>({
+  name: 'account',
+  schema: schema
+});
 
 /**
  * Indexes

@@ -14,7 +14,14 @@
     "declarationDir": "dist",
     "outDir": "dist",
     "typeRoots": ["node_modules/@types", "src/@types"],
-    "jsx": "react"
+    "jsx": "react",
+    "baseUrl": "./",
+    "paths": {
+      "@src/*": ["src/*"],
+      "@state/*": ["src/state/*"],
+      "@devtool/*": ["src/devtool/*"],
+      "@reducer/*": ["src/reducer/*"]
+    }
   },
   "include": ["src"]
 }

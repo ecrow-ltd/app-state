@@ -1,7 +1,7 @@
 import { createStore, combineReducers } from 'redux';
-import './reducers';
-import Reducer from './Reducer';
+import '@reducer/index';
+import State from './State';
 
-export const reducers = combineReducers(Reducer.mapMethods());
+export const reducers = combineReducers(State.mapMethods());
 
 export default createStore(reducers);

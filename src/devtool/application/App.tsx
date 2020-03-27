@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Reducer from '../../state/Reducer';
+import State from '@state/State';
 import Button from '@material-ui/core/Button';
 import ActionDialog from './ActionDialog';
 
@@ -8,7 +8,7 @@ export interface IProps {
   state: any;
 }
 export interface IState {
-  reducers: Reducer<any>[];
+  reducers: any[];
 }
 
 /**
@@ -28,7 +28,7 @@ class App extends Component<IProps, IState> {
   };
 
   state = {
-    reducers: Reducer.all(),
+    reducers: State.all(),
     dialogOpen: false,
     dialogData: {}
   };
@@ -141,11 +141,11 @@ class App extends Component<IProps, IState> {
     const { reducers } = this.state;
     return (
       <div>
-        {reducers.map(reducer => (
+        {reducers.map((reducer: any) => (
           <this.Row
             key={reducer.getName()}
             state={reducer.getState()}
-            actions={reducer.getActions()}
+            actions={reducer.getReducers()}
           />
         ))}
         <ActionDialog
