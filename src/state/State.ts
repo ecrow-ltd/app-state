@@ -1,31 +1,27 @@
 import { IObjectSchema } from './Schema';
-import {
-  IConstructorParameters,
-  IState,
-  IImplementerState,
-  IAction,
-  TActionMethod
-} from './State.d';
+import { IConstructor, IState, IImplementerState } from './State.d';
 
-class State<S extends IState, T extends IImplementerState> {
+import { IReducer, IReducerThunk } from './Reducer.d';
+
+class State<S extends IState, I extends IImplementerState> {
   /**
-   * Static collection of all reducers.
+   * Static collection of all State instances.
    */
-  private static reducers: State<any, any>[] = [];
+  private static instances: State<any, any>[] = [];
 
   /**
    * Returns all instantiated reducer instances.
    */
   public static all = (): State<any, any>[] => {
-    return State.reducers;
+    return State.instances;
   };
 
   /**
    * Returns all instantiated reducer methods.
    */
   public static allMethods() {
-    return State.reducers.map((reducer: State<any, any>) => {
-      return reducer.method;
+    return State.instances.map((instance: State<any, any>) => {
+      return instance.method;
     });
   }
 
@@ -34,10 +30,10 @@ class State<S extends IState, T extends IImplementerState> {
    */
   public static map() {
     const map: { [key: string]: any } = {};
-    const reducers = State.reducers;
-    for (let i = 0; i < reducers.length; i++) {
-      const reducer = reducers[i];
-      map[reducer.name.toLowerCase()] = reducer;
+    const instances = State.instances;
+    for (let i = 0; i < instances.length; i++) {
+      const instance = instances[i];
+      map[instance.name.toLowerCase()] = instance;
     }
     return map;
   }
@@ -49,10 +45,10 @@ class State<S extends IState, T extends IImplementerState> {
    */
   public static mapMethods() {
     const map: { [key: string]: any } = {};
-    const reducers = State.reducers;
-    for (let i = 0; i < reducers.length; i++) {
-      const reducer = reducers[i];
-      map[reducer.name.toLowerCase()] = reducer.method;
+    const instances = State.instances;
+    for (let i = 0; i < instances.length; i++) {
+      const instance = instances[i];
+      map[instance.name.toLowerCase()] = instance.method;
     }
     return map;
   }
@@ -70,12 +66,12 @@ class State<S extends IState, T extends IImplementerState> {
   /**
    * The schema for the state of the reducer.
    */
-  protected schema: IObjectSchema<T>;
+  protected schema: IObjectSchema<I>;
 
   /**
    * References to reducer functions for specific actions.
    */
-  protected reducer: { [key: string]: IAction<S, any> };
+  protected reducers: { [key: string]: IReducer<S, any> };
 
   /**
    * Readme documentation for this reducer.
@@ -86,12 +82,12 @@ class State<S extends IState, T extends IImplementerState> {
   /**
    * Create a new reducer instance.
    */
-  constructor(parameters: IConstructorParameters<S, T>) {
-    State.reducers.push(this);
-    this.name = parameters.initial._name;
-    this.state = parameters.initial;
-    this.schema = parameters.schema;
-    this.reducer = {};
+  constructor(params: IConstructor<S, I>) {
+    State.instances.push(this);
+    this.name = params.initial._name;
+    this.state = params.initial;
+    this.schema = params.schema;
+    this.reducers = {};
     this.doc = '';
   }
 
@@ -108,15 +104,25 @@ class State<S extends IState, T extends IImplementerState> {
   /**
    * Gets the reducers on this state.
    */
-  public getReducers = () => this.reducer;
+  public getReducers = () => this.reducers;
+
+  /**
+   * Gets the schema on this state.
+   */
+  public getSchema = () => this.schema;
+
+  /**
+   * Gets the validator on this state.
+   */
+  public getValidator = () => null;
 
   /**
    * The actual reducer method.
    */
   public method = (state: S = this.state, action: any): S => {
     const type = action.type;
-    if (this.reducer[type]) {
-      state = this.reducer[type].method(state, action.payload);
+    if (this.reducers[type]) {
+      state = this.reducers[type].method(state, action.payload);
     }
 
     return state;
@@ -124,24 +130,14 @@ class State<S extends IState, T extends IImplementerState> {
 
   /**
    * Creates a new action reducer.
-   * @param type The type of action to listen on.
+   * @template P The typing for the payload of this reducer.
+   * @param reducer Instance of a Reducer class.
    */
-  public action = <P>(
-    type: string,
-    description: string,
-    schema: any,
-    method: TActionMethod<S, P>,
-    validator: any = () => true
-  ): TActionMethod<S, P> => {
-    const action = {
-      type: `${this.name.toUpperCase()}/${type.toUpperCase()}`,
-      description,
-      schema,
-      method,
-      validator
-    };
-    this.reducer[action.type] = action;
-    return action.method;
+  public reducer = <P>(reducerThunk: IReducerThunk<S, P>): IReducer<S, P> => {
+    const reducer = reducerThunk(this);
+    reducer.type = `${this.name.toUpperCase()}/${reducer.type.toUpperCase()}`;
+    this.reducers[reducer.type] = reducer;
+    return reducer;
   };
 
   public documentation = (text: string) => {

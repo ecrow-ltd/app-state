@@ -8,7 +8,7 @@ export interface IProps {
   state: any;
 }
 export interface IState {
-  reducers: any[];
+  appStates: any[];
 }
 
 /**
@@ -28,7 +28,7 @@ class App extends Component<IProps, IState> {
   };
 
   state = {
-    reducers: State.all(),
+    appStates: State.all(),
     dialogOpen: false,
     dialogData: {}
   };
@@ -138,14 +138,14 @@ class App extends Component<IProps, IState> {
   };
 
   render() {
-    const { reducers } = this.state;
+    const { appStates } = this.state;
     return (
       <div>
-        {reducers.map((reducer: any) => (
+        {appStates.map((appState: any) => (
           <this.Row
-            key={reducer.getName()}
-            state={reducer.getState()}
-            actions={reducer.getReducers()}
+            key={appState.getName()}
+            state={appState.getState()}
+            actions={appState.getReducers()}
           />
         ))}
         <ActionDialog

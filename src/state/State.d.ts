@@ -1,9 +1,9 @@
 import { IObjectSchema } from './Schema';
 
 /**
- * Parameters on the contructor.
+ * Parameters on the constructor.
  */
-export interface IConstructorParameters<S, T> {
+export interface IConstructor<S, T> {
   /**
    * The initial object state of the reducer.
    */
@@ -26,44 +26,8 @@ export interface IState {
 
 /**
  * The implementer's state.
- * Essentially any object.
+ * Essentially any object that will extend IState.
  */
 export interface IImplementerState {
   [x: string]: any;
-}
-
-/**
- * Type for a reducer function on an action.
- */
-export type TActionMethod<T, P> = (state: T, payload: P) => T;
-
-/**
- * Interface for actions on a reducer.
- */
-export interface IAction<T, P> {
-  /**
-   * The string key that will trigger this action.
-   * This also allows action for triggers on other reducers.
-   */
-  type: string;
-
-  /**
-   * Description of the action.
-   */
-  description: string;
-
-  /**
-   * The JSON Schema object for the action's payload.
-   */
-  schema: any;
-
-  /**
-   * The validator function (compiled frm the JSON Schema object).
-   */
-  validator: any;
-
-  /**
-   * The method for an action is essentially a piece of the reducer function.
-   */
-  method: TActionMethod<T, P>;
 }

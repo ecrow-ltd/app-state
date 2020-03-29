@@ -1,13 +1,14 @@
 import { IObjectSchema } from './Schema';
 import {
-  IState,
+  IState as IStateState,
   IImplementerState as IReducerImplementerState
 } from './State.d';
+import { IReducerThunk } from './Reducer.d';
 
 /**
- * Parameters on the contructor.
+ * Parameters on the constructor.
  */
-export interface IConstructorParameters<T> {
+export interface IConstructor<T> {
   /**
    * The name of this reducer/collection.
    */
@@ -22,7 +23,7 @@ export interface IConstructorParameters<T> {
 /**
  * The type interface for a reducer's initial state.
  */
-export interface IState<T> extends IState {
+export interface IState<T> extends IStateState {
   /**
    * Indexes to objects in the collection.
    */
@@ -44,3 +45,9 @@ export interface IState<T> extends IState {
 export interface IImplementerState extends IReducerImplementerState {
   $id: string;
 }
+
+/**
+ * Reducer thunk type for a collection.
+ * @template P The typing for the reducer's payload.
+ */
+export type TCollectionReducer<P> = IReducerThunk<IState<any>, P>;

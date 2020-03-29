@@ -1,30 +1,26 @@
-import {
-  IConstructorParameters,
-  IState,
-  IImplementerState
-} from './Collection.d';
+import { IConstructor, IState, IImplementerState } from './Collection.d';
 import State from './State';
 
 /**
  * Primary structure of a Collection with Collection structure.
  * The reducer requires a type to validate insertions of information.
  */
-export default class Collection<T extends IImplementerState> extends State<
-  IState<T>,
-  T
+export default class Collection<I extends IImplementerState> extends State<
+  IState<I>,
+  I
 > {
   /**
    * Create a new reducer instance.
    */
-  constructor(parameters: IConstructorParameters<T>) {
+  constructor(params: IConstructor<I>) {
     super({
       initial: {
-        _name: parameters.name,
+        _name: params.name,
         _indices: {},
         _uniques: [],
         collection: []
       },
-      schema: parameters.schema
+      schema: params.schema
     });
   }
 
