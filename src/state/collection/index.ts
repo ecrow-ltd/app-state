@@ -1,3 +1,5 @@
-import createReducer from './create.reducer';
+import create from './create.reducer';
 
-export const create = createReducer;
+const all = [create];
+
+export { all, create };

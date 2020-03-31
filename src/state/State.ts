@@ -2,6 +2,7 @@ import { IObjectSchema } from './Schema';
 import { IConstructor, IState, IImplementerState } from './State.d';
 
 import { IReducer, IReducerThunk } from './Reducer.d';
+import { IAction, TActionMethod } from './Action.d';
 
 class State<S extends IState, I extends IImplementerState> {
   /**
@@ -74,6 +75,11 @@ class State<S extends IState, I extends IImplementerState> {
   protected reducers: { [key: string]: IReducer<S, any> };
 
   /**
+   * References to action methods for specific actions.
+   */
+  protected actions: { [key: string]: TActionMethod<any> };
+
+  /**
    * Readme documentation for this reducer.
    * This is typically only assigned if the application is in developer mode.
    */
@@ -88,6 +94,7 @@ class State<S extends IState, I extends IImplementerState> {
     this.state = params.initial;
     this.schema = params.schema;
     this.reducers = {};
+    this.actions = {};
     this.doc = '';
   }
 
@@ -107,12 +114,20 @@ class State<S extends IState, I extends IImplementerState> {
   public getReducers = () => this.reducers;
 
   /**
+   * Gets the actions on this state.
+   */
+  public getActions = () => this.actions;
+
+  /**
    * Gets the schema on this state.
    */
   public getSchema = () => this.schema;
 
   /**
    * Gets the validator on this state.
+   * TODO: Validators are compiled functions from JSONSchema object.
+   *  This is for applications that don't use TypeScript but still need some validation for types.
+   *  This is a planned feature. For now, all validators are null (aka skipped) during type checking.
    */
   public getValidator = () => null;
 
@@ -133,11 +148,17 @@ class State<S extends IState, I extends IImplementerState> {
    * @template P The typing for the payload of this reducer.
    * @param reducer Instance of a Reducer class.
    */
-  public reducer = <P>(reducerThunk: IReducerThunk<S, P>): IReducer<S, P> => {
+  public reducer = <P>(reducerThunk: IReducerThunk<S, P>): TActionMethod<P> => {
     const reducer = reducerThunk(this);
     reducer.type = `${this.name.toUpperCase()}/${reducer.type.toUpperCase()}`;
     this.reducers[reducer.type] = reducer;
-    return reducer;
+    this.actions[reducer.type] = (by, message, payload) => ({
+      type: reducer.type,
+      by: by,
+      message: message,
+      payload: payload
+    });
+    return this.actions[reducer.type];
   };
 
   public documentation = (text: string) => {

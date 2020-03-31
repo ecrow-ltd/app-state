@@ -2,6 +2,11 @@ import { IConstructor, IState, IImplementerState } from './Collection.d';
 import State from './State';
 
 /**
+ * Default reducers for collection.
+ */
+import * as CollectionReducers from './collection/index';
+
+/**
  * Primary structure of a Collection with Collection structure.
  * The reducer requires a type to validate insertions of information.
  */
@@ -22,6 +27,9 @@ export default class Collection<I extends IImplementerState> extends State<
       },
       schema: params.schema
     });
+
+    const action = this.reducer<I>(CollectionReducers.create);
+    //CollectionReducers.all.forEach(reducer => this.reducer(reducer));
   }
 
   /**

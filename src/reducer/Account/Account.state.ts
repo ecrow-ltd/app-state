@@ -1,5 +1,4 @@
 import Collection from '@state/Collection';
-import * as Reducers from '@state/collection/index';
 import { IObjectSchema } from '@state/Schema.d';
 
 /**
@@ -104,9 +103,8 @@ Account.documentation(`
 The account reducer maintains account information about a specific user.
 `);
 
-/**
- * Add some reducers.
- */
-Account.reducer<IAccount>(Reducers.create);
+const actions = Account.getActions();
+
+console.log(actions['ACCOUNT/CREATE']('SYSTEM', 'First action', {}));
 
 export default Account;
