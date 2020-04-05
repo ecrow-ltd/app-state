@@ -105,6 +105,6 @@ The account reducer maintains account information about a specific user.
 
 const actions = Account.getActions();
 
-console.log(actions['ACCOUNT/CREATE']('SYSTEM', 'First action', {}));
+console.log(actions['CREATE']('SYSTEM', 'First action', {}));
 
 export default Account;

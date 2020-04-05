@@ -150,7 +150,7 @@ class State<S extends IState, I extends IImplementerState> {
    */
   public reducer = <P>(reducerThunk: IReducerThunk<S, P>): TActionMethod<P> => {
     const reducer = reducerThunk(this);
-    reducer.type = `${this.name.toUpperCase()}/${reducer.type.toUpperCase()}`;
+    reducer.type = `${reducer.type.toUpperCase()}`;
     this.reducers[reducer.type] = reducer;
     this.actions[reducer.type] = (by, message, payload) => ({
       type: reducer.type,
